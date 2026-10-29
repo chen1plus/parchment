@@ -5,7 +5,7 @@ Typst 排版模板集。每個模板各自一個資料夾，入口固定為
 
 | 模板 | 入口 | 說明 |
 |---|---|---|
-| [jotting](jotting/) | [`jotting/lib.typ`](jotting/lib.typ) | A4 課堂報告；無封面、目錄、摘要，頁碼可選 |
+| [jotting](jotting/) | [`jotting/lib.typ`](jotting/lib.typ) | A4 課堂報告；無封面、目錄、摘要，頁碼可選；程式碼區塊用 codly |
 
 ## 使用
 

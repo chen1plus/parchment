@@ -1,3 +1,5 @@
+#import "@preview/codly:2.0.0" as codly
+
 #let fonts = (
   body: (
     "Libertinus Serif",
@@ -66,21 +68,26 @@
   show figure.where(kind: table): set figure.caption(position: top)
   show figure: it => block(above: 1em, below: 1em, it)
 
+  show: codly.theme("one-light")
+  show: codly.set_(lang-position: none, number-enabled: false)
+  show: codly.set_(leading: .2em, padding: (bottom: .3em, top: .2em, x: .4em))
+  show raw.where(block: true): codly.new
+
   // The title block
-  block(above: 0pt, below: 0pt, width: 100%)[
-    #block(above: 0pt, below: 0pt, width: 100%)[
-      #set text(
+  block(above: 0pt, below: 0pt, width: 100%)[#{
+    block(above: 0pt, below: 0pt, width: 100%)[#{
+      set text(
         font: fonts.title + fonts.head,
         size: fsize.title,
         weight: "bold",
       )
-      #title
-    ]
+      title
+    }]
 
-    #block(above: 1.5 * leading, below: 0pt, rect(fill: black, height: 1pt, width: 100%))
-    #block(above: 1.5 * leading, below: 0pt, width: 100%)[#author · #date]
-    #v(leading)
-  ]
+    block(above: 1.5 * leading, below: 0pt, rect(fill: black, height: 1pt, width: 100%))
+    block(above: 1.5 * leading, below: 0pt, width: 100%)[#author · #date]
+    v(leading)
+  }]
 
   body
 }
