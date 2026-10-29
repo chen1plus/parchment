@@ -2,19 +2,21 @@
 
 A4、無封面、無目錄、無摘要的課堂報告樣板。第一頁第一個元素就是標題。
 頁碼預設關閉，需要時用 `page-number: true` 開啟，從 1 開始。使用
-Typst 0.15.1 編譯。模板入口是 `lib.typ`。
+Typst 0.15.1 編譯。模板入口是 `lib.typ`。程式碼區塊由 codly 處理，
+預設是灰底、行號、無框線的樣式。
 
 ## 檔案
 
 | 檔案 | 用途 |
 |---|---|
-| `lib.typ` | 模板入口，只含版面設定，沒有正文 |
-| `example.typ` | 可編譯的中文實驗結報範例（2 頁） |
+| `lib.typ` | 模板入口，只含版面設定與 codly 設定，沒有正文 |
+| `example.typ` | 可編譯的中文實驗結報範例（3 頁） |
 | `example.pdf` | 範例編譯結果 |
 | `figures/calibration.svg` | 範例用的檢量線圖 |
 
-範例是 2 頁：第 1 頁在檢量線公式後結束，表格、圖與討論都排在第 2 頁。
-這是內文與圖表放不下的自然結果，不是固定版面的一部分。
+範例是 3 頁：第 1 頁在檢量線公式後結束；第 2 頁是表格、圖與討論；
+第 3 頁是結論與附錄的迴歸程式。這是內文、程式碼與圖表放不下的自然
+結果，不是固定版面的一部分。
 
 ## 編譯
 
@@ -23,6 +25,9 @@ Typst 0.15.1 編譯。模板入口是 `lib.typ`。
 ```sh
 typst compile example.typ example.pdf
 ```
+
+第一次編譯會自動下載 `@preview/codly:2.0.0` 與它的相依套件
+（`elembic`）。codly 需要 Typst 0.15.0 以上；本模板以 0.15.1 測試。
 
 ## 使用方式
 
@@ -79,6 +84,47 @@ typst compile example.typ example.pdf
 固定在表格上方，圖片說明維持在下方；其餘結構相同，行距仍依 `lang`
 不同。
 
+## 程式碼區塊
+
+`lib.typ` 已經載入 codly，正文直接寫 fenced code block 就會套用樣式，
+不需要在文件裡另外 `#import` 或 `#show`：
+
+````typst
+```python
+def calibration(xs, ys):
+    return sum(xs) / len(xs), sum(ys) / len(ys)
+```
+````
+
+行內程式碼維持 Typst 原生的等寬字體、顏色與 0.8em 字級，
+不會變成有行號的區塊。
+
+目前的區塊樣式是 codly 的 `clean` 主題，只另外指定灰底；水平列
+內距、無框線、無圓角、無語言與檔名標籤都沿用 `clean` / codly 的
+預設值。垂直行距另外用 `leading` 收緊（codly 預設的垂直 inset
+`.32em` 太鬆）。左側保留行號。要改樣式就動 `lib.typ` 這幾行：
+
+```typst
+show: codly.theme("clean", fill: luma(247))
+show: codly.set_(lang-position: none, file-position: none, leading: .05em)
+show raw.where(block: true): codly.new
+```
+
+例如把 `theme(...)` 的 `fill` 改成 `none` 就沒有灰底；把
+`lang-position` 改成 `top + right` 就會顯示語言標籤（語言名稱與圖示
+需另外載入 `@preview/codly-languages`）。需要編號與說明時，把區塊
+放進 `figure`，codly 會沿用外層 figure 的標籤：
+
+```typst
+#figure(
+  caption: [迴歸程式],
+  raw("slope, intercept = np.polyfit(c, A, 1)", lang: "python", block: true),
+)
+```
+
+範例的附錄標題寫成 `#heading(numbering: none)[附錄：迴歸程式]`，
+這樣就不會被 `1.1` 的自動編號影響。
+
 ## 版面數字
 
 | 數值 | 目前值 | 說明 |
@@ -97,6 +143,8 @@ typst compile example.typ example.pdf
 | 二級標題前後 | 18.2pt / 7.92pt（中文）、6.6pt（英文） | 1.4 × `fsize.h2` / 1.1 × leading |
 | 圖表說明 | 10.8pt（0.9em） | 不齊行；表格說明在上、圖片說明在下 |
 | 圖表區塊 | 上下各 1em | 表格與圖片皆同 |
+| 程式碼 | 9.6pt（0.8em） | 等寬字體；左側行號，無語言與檔名標籤 |
+| 程式碼區塊 | 灰底 `luma(247)` | 無框線、無圓角；水平內距用 codly 預設值，垂直 `leading` .05em |
 | 頁邊 | Typst 預設 | 未指定；A4 四邊 2.5cm |
 
 範例實測：標題基線 86.87pt、線 101.67–102.67pt、作者基線
@@ -154,6 +202,17 @@ Typst 沒有 `line-height`，`par.leading` 是行與行之間的**空隙**。
 - **圖表**：說明文字與表格內文都是正文的 0.9em，行距是 0.9 ×
   leading，且不齊行；表格說明固定在表格上方。表格與圖片區塊上下各
   留 1em。
+- **程式碼**：字級沿用 Typst raw 的預設 0.8em（9.6pt），樣板不另外
+  設定。放進 `figure` 時，圖表的 0.9em 會再乘上去，程式碼會變成
+  8.64pt（0.72em）；不希望縮小的話，在內文自己覆寫 raw 字級。區塊用
+  codly 的 `clean` 主題，只把底色改成 `luma(247)`；水平內距、框線、
+  圓角、語言與檔名標籤都用 codly 預設值。垂直方向另外用
+  `leading: .05em` 收緊，因為 codly 預設的垂直 inset 是 `.32em`，
+  行距會到 20.7pt；現在實測約 13pt。行號預設開啟，由 codly 依序
+  編號。灰底只鋪在程式碼列，區塊上下仍用一般段距，沒有另外包
+  `block`。要恢復 codly 的預設外觀，把 `lib.typ` 裡的
+  `codly.theme(...)` 那行拿掉即可（`codly.set_` 只是隱藏標籤與調整
+  leading）。
 
 ## 字體與字級
 
@@ -221,7 +280,9 @@ Noto TC 的機器就會自動接手。
       1.5 倍）、段距 2.5 × leading、左右對齊（justify）；圖說與表格
       維持不齊行。
 - [x] 標題沿用正文的行盒與行距，只換字體、字級與粗細。
-- [x] 範例 2 頁，含表格、圖、條列清單、公式。
+- [x] 範例 3 頁，含表格、圖、條列清單、公式，以及附錄的程式碼區塊。
+- [x] 程式碼區塊用 codly 排版：灰底、行號、無框線與語言標籤；
+      行內程式碼維持 0.8em，不加行號。
 - [x] 範例的標題為一行；更長的標題會自然折行，行距沿用正文
       （中文 1.36 倍），不與分隔線或作者行重疊。
 - [x] 字體全部嵌入，沒有缺字方塊。

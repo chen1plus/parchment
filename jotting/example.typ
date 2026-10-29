@@ -42,6 +42,8 @@ $ A = epsilon b c $
 
 $ A = 0.2012 c + 0.0025, quad R^2 = 0.9999 $
 
+迴歸以 Python 計算，程式見附錄。
+
 線性範圍涵蓋 0 至 8 mg/L，檢量線如圖 1 所示。樣品經二倍稀釋後測得 $A = 0.384$，代入檢量線得稀釋液濃度 1.90 mg/L，乘回稀釋倍率後為 3.79 mg/L。三次重複的標準差為 #box[0.06 mg/L]。
 
 #figure(
@@ -83,3 +85,14 @@ $ A = 0.2012 c + 0.0025, quad R^2 = 0.9999 $
 = 結論
 
 檢量線在 0 至 8 mg/L 間線性良好（$R^2 = 0.9999$）。地下水鐵濃度為 3.8 ± 0.1 mg/L，約為飲用水標準的 13 倍，建議處理後再使用。
+
+#heading(numbering: none)[附錄：迴歸程式]
+
+```python
+import numpy as np
+
+c = np.array([0, 1, 2, 4, 6, 8])
+A = np.array([0.002, 0.203, 0.405, 0.809, 1.210, 1.611])
+slope, intercept = np.polyfit(c, A, 1)
+print(f"A = {slope:.4f} c + {intercept:.4f}")
+```
