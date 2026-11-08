@@ -1,0 +1,15 @@
+[package]
+name = "jotting"
+version = "0.1.0"
+description = "Clean A4 reports in English and Traditional Chinese"
+
+authors = ["Aaron Chen"]
+repository = "https://github.com/chen1plus/parchment"
+
+compiler = "0.15.1"
+entrypoint = "lib.typ"
+exclude = ["example.pdf", "example-en.pdf"]
+
+[template]
+path = "template"
+entrypoint = "main.typ"
