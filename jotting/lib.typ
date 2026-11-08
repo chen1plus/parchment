@@ -24,7 +24,7 @@
   footer: 9pt,
 )
 
-#let report(
+#let jotting(
   title: [報告標題],
   author: [姓名　學號],
   date: [日期],
@@ -66,7 +66,6 @@
   show figure: set text(size: .9em)
   show figure: set par(leading: .9 * leading, justify: false)
   show figure.where(kind: table): set figure.caption(position: top)
-  show figure: it => block(above: 1em, below: 1em, it)
 
   show: codly.theme("one-light")
   show: codly.set_(lang-position: none, number-enabled: false)
