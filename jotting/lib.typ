@@ -36,12 +36,12 @@
   set enum(indent: .5em)
   set heading(numbering: "1.1")
 
-  let footer = if page-number {
+  let footer = if pg-num {
     set text(fill: luma(120), font: fonts.head, size: fsize.footer)
     context { align(center)[#counter(page).display()] }
   } else { none }
 
-  set text(lang: lang)
+  set text(lang: lang, region: "tw")
   set text(font: fonts.body, size: fsize.body)
   set text(bottom-edge: -.2em, top-edge: .8em)
   set page(footer: footer, paper: "a4")
@@ -74,6 +74,8 @@
 
   // The title block
   block(above: 0pt, below: 0pt, width: 100%)[#{
+    set par(justify: false)
+
     block(above: 0pt, below: 0pt, width: 100%)[#{
       set text(
         font: fonts.title + fonts.head,
