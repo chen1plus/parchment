@@ -25,11 +25,11 @@
 )
 
 #let jotting(
-  title: [報告標題],
-  author: [姓名　學號],
-  date: [日期],
+  title: [Title],
+  author: [Name],
+  date: [Date],
   lang: "en",
-  page-number: false,
+  pg-num: false,
   body,
 ) = {
   set list(indent: .5em)
