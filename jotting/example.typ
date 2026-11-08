@@ -1,6 +1,6 @@
-#import "lib.typ": report
+#import "lib.typ": jotting
 
-#show: report.with(
+#show: jotting.with(
   title: [以鄰二氮菲分光光度法測定#box[地下水]中的微量鐵含量],
   author: [林亞岑　B12502045],
   date: [2026 年 10 月 21 日],
